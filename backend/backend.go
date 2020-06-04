@@ -22,7 +22,7 @@ func (a *Backend) WailsInit(runtime *wails.Runtime) error {
 	a.log = runtime.Log.New("Backend")
 	a.runtime = runtime
 
-	runtime.Events.On("file-saved", a.SaveFile)
+	runtime.Events.On("file-changed", a.SaveFile)
 
 	return nil
 }
@@ -54,7 +54,7 @@ func (a *Backend) OpenFile() {
 	// Get a file
 	a.file = a.runtime.Dialog.SelectFile()
 	if a.file == "" {
-		a.file = "/home/justmiles/workspace/ecs-gui/README.md"
+		return
 	}
 
 	// Read the file
@@ -69,6 +69,11 @@ func (a *Backend) OpenFile() {
 	// Open the file in the editor
 	a.runtime.Window.SetTitle(filepath.Base(a.file))
 	a.runtime.Events.Emit("file-opened", string(encodedContents))
+}
+
+// ImageUploadFunction opens the selected file
+func (a *Backend) ImageUploadFunction(s map[string]interface{}) {
+	fmt.Println(s)
 }
 
 func (a *Backend) GetDefaultContent() string {
