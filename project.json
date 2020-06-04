@@ -1,0 +1,21 @@
+{
+ "name": "justnotes",
+ "description": "Enter your project description",
+ "author": {
+  "name": "justmiles",
+  "email": "justmiles"
+ },
+ "version": "0.1.0",
+ "binaryname": "justnotes",
+ "frontend": {
+  "dir": "frontend",
+  "install": "npm install",
+  "build": "npm run build",
+  "bridge": "src",
+  "serve": "npm run serve"
+ },
+ "WailsVersion": "",
+ "CrossCompile": false,
+ "Platform": "",
+ "Architecture": ""
+}
