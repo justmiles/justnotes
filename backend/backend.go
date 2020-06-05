@@ -71,6 +71,17 @@ func (a *Backend) OpenFile() {
 	a.runtime.Events.Emit("file-opened", string(encodedContents))
 }
 
+// OpenFolder opens a folder
+func (a *Backend) OpenFolder() {
+
+	// Get a file
+	dir := a.runtime.Dialog.SelectDirectory()
+	if dir == "" {
+		return
+	}
+	a.runtime.Events.Emit("folder-opened", string(dir))
+}
+
 // ImageUploadFunction opens the selected file
 func (a *Backend) ImageUploadFunction(s map[string]interface{}) {
 	fmt.Println(s)

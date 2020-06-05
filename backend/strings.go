@@ -11,19 +11,20 @@ A simple markdown editor powered by [Wails](https://wails.app/) and [EasyMDE](ht
 
 | Shortcut (Windows / Linux) | Shortcut (macOS) | Action                 |
 | -------------------------- | ---------------- | ---------------------- |
-| *Ctrl-'*                   | *Cmd-'*          | "toggleBlockquote"     |
-| *Ctrl-B*                   | *Cmd-B*          | "toggleBold"           |
-| *Ctrl-E*                   | *Cmd-E*          | "cleanBlock"           |
-| *Ctrl-H*                   | *Cmd-H*          | "toggleHeadingSmaller" |
-| *Ctrl-I*                   | *Cmd-I*          | "toggleItalic"         |
-| *Ctrl-K*                   | *Cmd-K*          | "drawLink"             |
-| *Ctrl-L*                   | *Cmd-L*          | "toggleUnorderedList"  |
-| *Ctrl-P*                   | *Cmd-P*          | "togglePreview"        |
-| *Ctrl-Alt-C*               | *Cmd-Alt-C*      | "toggleCodeBlock"      |
-| *Ctrl-Alt-I*               | *Cmd-Alt-I*      | "drawImage"            |
-| *Ctrl-Alt-L*               | *Cmd-Alt-L*      | "toggleOrderedList"    |
-| *Shift-Ctrl-H*             | *Shift-Cmd-H*    | "toggleHeadingBigger"  |
-| *F9*                       | *F9*             | "toggleSideBySide"     |
+| Ctrl-'                     | Cmd-'            | Toggle Blockquote      |
+| Ctrl-B                     | Cmd-B            | Toggle Bold            |
+| Ctrl-E                     | Cmd-E            | Clean Block            |
+| Ctrl-H                     | Cmd-H            | Toggle Heading Smaller |
+| Ctrl-I                     | Cmd-I            | Toggle Italic          |
+| Ctrl-K                     | Cmd-K            | Draw Link              |
+| Ctrl-L                     | Cmd-L            | Toggle Unordered List  |
+| Ctrl-P                     | Cmd-P            | Toggle Preview         |
+| Ctrl-Alt-C                 | Cmd-Alt-C        | Toggle Code Block      |
+| Ctrl-Alt-I                 | Cmd-Alt-ID       | Insert Image           |
+| Ctrl-Alt-L                 | Cmd-Alt-L        | Toggle Ordered List    |
+| Shift-Ctrl-H               | Shift-Cmd-H      | Toggle Heading Bigger  |
+| F9                         | F9               | Toggle Side By Side    |
+| F11                        | F11              | Toggle Full Screen     |
 
 ![](https://thumbs.gfycat.com/IncredibleRapidBluetonguelizard-size_restricted.gif)
 `)

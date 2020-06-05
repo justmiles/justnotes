@@ -2,8 +2,10 @@
   <span>
     <Split :style="windowHeight" :gutterSize="4">
       <SplitArea :size="10">
+        <button v-on:click="toggleFullScreen">Close</button>
         <treeselect
-          v-model="value"
+          v-model="fileName"
+          :always-open="showFileSelector"
           :options="files"
           :searchable="true"
           :clearable="false"
@@ -34,17 +36,15 @@
 
 <script>
 import EasyMDE from "easymde";
-// import * as Wails from '@wailsapp/runtime';
-// using ES6 modules
-// import VueSplit from "vue-split-panel";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   data() {
     return {
-      defaultContent: "",
-      windowHeight: "height: 800px;",
+      windowHeight: "height: 967px;",
+      fileName: "default",
+      showFileSelector: true,
       files: [
         {
           id: "a",
@@ -79,22 +79,42 @@ export default {
       var self = this;
       window.backend.Backend.OpenFile().then(result => {
         self.message = result;
+        self.unFullscreen();
       });
+    },
+    // Handle Window size
+    onResize() {
+      this.windowHeight = "height: " + (window.innerHeight - 16) + "px;";
+    },
+    toggleFullScreen() {
+      this.easyMDE.toggleFullScreen();
+    },
+    unFullscreen() {
+      if (this.easyMDE.isFullscreenActive()) {
+        this.toggleFullScreen();
+      }
     }
   },
   mounted() {
+    var self = this;
+    this.windowHeight = "height: " + (window.innerHeight - 16) + "px;";
+    window.addEventListener("resize", this.onResize);
+
     // Custom Toolbars
     var openFileToolbar = {
       name: "custom",
       action: function() {
+        self.showFileSelector = false;
         window.backend.Backend.OpenFile();
+        self.showFileSelector = true;
+        self.easyMDE.toggleFullScreen();
       },
       className: "fa fa-folder-open",
       title: "Open File"
     };
 
     window.backend.Backend.GetDefaultContent().then(defaultContent => {
-      var easyMDE = new EasyMDE({
+      self.easyMDE = new EasyMDE({
         autoDownloadFontAwesome: true,
         element: document.getElementById("mde"),
         initialValue: atob(defaultContent),
@@ -114,13 +134,20 @@ export default {
           "ordered-list",
           "table"
         ],
-        minHeight: "500px",
+        minHeight: window.innerHeight - 120 + "px",
         autofocus: true,
         spellChecker: true,
         promptURLs: true,
         uploadImage: true,
         renderingConfig: {
           codeSyntaxHighlighting: true
+        },
+        onToggleFullScreen: function() {
+          if (self.easyMDE.isFullscreenActive()) {
+            self.showFileSelector = false;
+          } else {
+            self.showFileSelector = true;
+          }
         },
         imageUploadFunction: function(
           file,
@@ -146,22 +173,15 @@ export default {
       // easyMDE.toggleFullScreen();
 
       // Send changes to Wails backend
-      easyMDE.codemirror.on("change", function() {
-        window.wails.Events.Emit("file-changed", btoa(easyMDE.value()));
+      self.easyMDE.codemirror.on("change", function() {
+        window.wails.Events.Emit("file-changed", btoa(self.easyMDE.value()));
       });
 
       // Handle Wails file-opened events
       window.wails.Events.On("file-opened", result => {
-        easyMDE.value(atob(result));
+        self.easyMDE.value(atob(result));
       });
     });
-  },
-  // Handle Window size
-  beforeDestroy() {
-    window.removeEventListener("resize", this.onResize);
-  },
-  onResize() {
-    this.windowHeight = "height: " + window.innerHeight + "px;";
   }
 };
 </script>
