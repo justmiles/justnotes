@@ -16,4 +16,3 @@ In another window, start the frontend
 ```sh
 cd frontend && npm run serve
 ```
-

@@ -18,6 +18,7 @@ A simple markdown editor powered by [Wails](https://wails.app/) and [EasyMDE](ht
 | Ctrl-I                     | Cmd-I            | Toggle Italic          |
 | Ctrl-K                     | Cmd-K            | Draw Link              |
 | Ctrl-L                     | Cmd-L            | Toggle Unordered List  |
+| Ctrl-O                     | Cmd-O            | Open File              |
 | Ctrl-P                     | Cmd-P            | Toggle Preview         |
 | Ctrl-Alt-C                 | Cmd-Alt-C        | Toggle Code Block      |
 | Ctrl-Alt-I                 | Cmd-Alt-ID       | Insert Image           |
@@ -25,6 +26,4 @@ A simple markdown editor powered by [Wails](https://wails.app/) and [EasyMDE](ht
 | Shift-Ctrl-H               | Shift-Cmd-H      | Toggle Heading Bigger  |
 | F9                         | F9               | Toggle Side By Side    |
 | F11                        | F11              | Toggle Full Screen     |
-
-![](https://thumbs.gfycat.com/IncredibleRapidBluetonguelizard-size_restricted.gif)
 `)

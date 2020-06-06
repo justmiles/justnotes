@@ -11,10 +11,11 @@ import (
 
 // Backend struct is used to execute processes behind the scenes
 type Backend struct {
-	file     string
-	contents string
-	runtime  *wails.Runtime
-	log      *wails.CustomLogger
+	File       string
+	contents   string
+	runtime    *wails.Runtime
+	log        *wails.CustomLogger
+	fullscreen bool
 }
 
 // WailsInit intializes the Backend
@@ -29,7 +30,7 @@ func (a *Backend) WailsInit(runtime *wails.Runtime) error {
 
 // SaveFile is invoked whtne the file-save event triggers
 func (a *Backend) SaveFile(data ...interface{}) {
-	if a.file == "" {
+	if a.File == "" {
 		return
 	}
 
@@ -40,7 +41,7 @@ func (a *Backend) SaveFile(data ...interface{}) {
 		return
 	}
 
-	err = ioutil.WriteFile(a.file, []byte(decodedContents), 0644)
+	err = ioutil.WriteFile(a.File, []byte(decodedContents), 0644)
 	if err != nil {
 		a.ErrorNotification("unable to write file: " + err.Error())
 		return
@@ -48,17 +49,32 @@ func (a *Backend) SaveFile(data ...interface{}) {
 
 }
 
-// OpenFile opens the selected file
-func (a *Backend) OpenFile() {
+// ToggleFullScreen toggles fullscreen
+func (a *Backend) ToggleFullScreen() {
+	if a.fullscreen {
+		a.runtime.Window.UnFullscreen()
+		a.fullscreen = false
+	} else {
+		a.runtime.Window.Fullscreen()
+		a.fullscreen = true
+	}
+}
+
+// SelectFile opens the selected file
+func (a *Backend) SelectFile() {
 
 	// Get a file
-	a.file = a.runtime.Dialog.SelectFile()
-	if a.file == "" {
+	a.File = a.runtime.Dialog.SelectFile()
+	if a.File == "" {
 		return
 	}
+	a.OpenFile()
+}
 
+// OpenFile opens the selected file
+func (a *Backend) OpenFile() {
 	// Read the file
-	contents, err := ioutil.ReadFile(a.file)
+	contents, err := ioutil.ReadFile(a.File)
 	if err != nil {
 		a.ErrorNotification("unable to open file: " + err.Error())
 		return
@@ -67,28 +83,18 @@ func (a *Backend) OpenFile() {
 	encodedContents := base64.StdEncoding.EncodeToString(contents)
 
 	// Open the file in the editor
-	a.runtime.Window.SetTitle(filepath.Base(a.file))
+	a.runtime.Window.SetTitle(filepath.Base(a.File))
 	a.runtime.Events.Emit("file-opened", string(encodedContents))
 }
 
-// OpenFolder opens a folder
-func (a *Backend) OpenFolder() {
-
-	// Get a file
-	dir := a.runtime.Dialog.SelectDirectory()
-	if dir == "" {
-		return
-	}
-	a.runtime.Events.Emit("folder-opened", string(dir))
-}
-
-// ImageUploadFunction opens the selected file
-func (a *Backend) ImageUploadFunction(s map[string]interface{}) {
-	fmt.Println(s)
-}
-
+// GetDefaultContent returns the inital content in the editor
 func (a *Backend) GetDefaultContent() string {
-	return base64.StdEncoding.EncodeToString(defaultContents)
+	if a.File == "" {
+		return base64.StdEncoding.EncodeToString(defaultContents)
+	} else {
+		a.OpenFile()
+		return ""
+	}
 }
 
 // OpenURL opens a URL in the browser
