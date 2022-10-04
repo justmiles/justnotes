@@ -1,33 +1,60 @@
 package main
 
 import (
-	"justnotes/backend"
-	"os"
+	"embed"
 
-	"github.com/leaanthony/mewn"
-	"github.com/wailsapp/wails"
+	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
+	"github.com/wailsapp/wails/v2/pkg/options"
+	"github.com/wailsapp/wails/v2/pkg/options/linux"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
+)
+
+//go:embed all:frontend/dist
+var assets embed.FS
+
+//go:embed build/appicon.png
+var icon []byte
+
+const (
+	title       = "sprint-reports-wails"
+	description = "Reporting all the gthings"
 )
 
 func main() {
+	// Create an instance of the app structure
+	app := NewApp()
 
-	var b backend.Backend
+	// Create application with options
+	err := wails.Run(&options.App{
+		Title:    title,
+		Width:    1024,
+		Height:   768,
+		Assets:   assets,
+		LogLevel: logger.DEBUG,
 
-	if len(os.Args) == 2 {
-		b.File = os.Args[1]
-	}
+		OnStartup: app.startup,
 
-	js := mewn.String("./frontend/dist/app.js")
-	css := mewn.String("./frontend/dist/app.css")
+		// MAC specific options
+		Mac: &mac.Options{
+			About: &mac.AboutInfo{
+				Title:   title,
+				Message: description,
+				Icon:    icon,
+			},
+		},
 
-	app := wails.CreateApp(&wails.AppConfig{
-		Width:     1024,
-		Height:    768,
-		Title:     "justnotes",
-		JS:        js,
-		CSS:       css,
-		Colour:    "#ffffff",
-		Resizable: true,
+		// MAC specific options
+		Linux: &linux.Options{
+			Icon: icon,
+		},
+
+		Bind: []interface{}{
+			app,
+		},
 	})
-	app.Bind(&b)
-	app.Run()
+
+	if err != nil {
+		println("Error:", err.Error())
+	}
 }
